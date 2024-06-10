@@ -1,0 +1,102 @@
+body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+    
+    h2 {
+      margin-left: 10px;
+      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+      
+    }
+    
+    .desc {
+      align-items: center;
+      justify-content: center;
+      display: flex;
+      border: 2px rgba(0, 0, 0, 0.574);
+      border-radius: 5px;
+      font: 19px black;
+      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+      margin: 15px;
+      margin-left: 80px;
+      margin-right: 80px;
+      border-style: solid;
+      padding: 3px;
+       
+    }
+    
+    .maintitle {
+      align-items: center;
+      justify-content: center;
+      display: flex;
+    }
+    
+    
+    .halloballo{
+      margin-left: 10px;
+      margin-right: 10px;
+      border: 1.5px rgba(0, 0, 0, 0.59);
+      padding: 10px;
+      box-sizing: border-box;
+      border-radius: 10px;
+      box-shadow: 1.5px 3px 5px darkgray;
+      transition: background 0.3s ease;
+      border-style: solid;
+    }
+    
+    .halloballo:hover {
+      background-color: lightgrey;
+    }
+    
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 1rem 0;
+      text-align: center;
+    }
+    
+    main {
+      padding: 1rem;
+    }
+    
+    .disaster {
+      margin: 20px;
+      background-color: #ffffffaa;
+      border-color: darkgray;
+      border: 2.5px darkgray;
+      padding: 1px;
+      box-shadow: 1 2 5px rgba(0, 0, 0, 0.1);
+      color: #333;
+      border-style: solid;
+      border-radius: 7px;
+    }
+
+
+    .loading {
+      justify-content: center;
+      display: flex;
+      margin-left: 20px;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    
+    /* width (Code from W3schools)*/ 
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
