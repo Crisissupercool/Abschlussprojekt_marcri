@@ -65,6 +65,7 @@ const getGeoJSONEvents = async (token) => {
             'Authorization': `Bearer ${token}`
         }
     });
+    
 
     if (!response.ok) {
         const errorText = await response.text();
