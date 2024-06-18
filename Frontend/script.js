@@ -82,6 +82,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const geoJSONEvents = await fetchGeoJSONEvents(offset, limit);
             disastersData = geoJSONEvents;
             renderEvents();
+            if (geoJSONEvents.length >= limit) {
+                document.getElementById('loadMoreBtn').style.display = 'block';
+            } else {
+                document.getElementById('loadMoreBtn').style.display = 'none';
+            }
         } catch (error) {
             console.error(error);
             displayError(error.message);
@@ -91,6 +96,29 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     main();
+
+    document.getElementById('loadMoreBtn').addEventListener('click', async () => {
+        offset += limit; // Increase offset
+        setLoading(true);
+        try {
+            const geoJSONEvents = await fetchGeoJSONEvents(offset, limit);
+            disastersData.push(...geoJSONEvents); // Append new events to existing data
+            renderEvents(); // Render updated events
+
+            // Show/hide load more button based on the number of events
+            if (geoJSONEvents.length >= limit) {
+                document.getElementById('loadMoreBtn').style.display = 'block';
+            } else {
+                document.getElementById('loadMoreBtn').style.display = 'none';
+            }
+        } catch (error) {
+            console.error(error);
+            displayError(error.message);
+        } finally {
+            setLoading(false);
+        }
+    });
+
     document.getElementById('geoJSONEvents').addEventListener('click', async (event) => {
         if (event.target.classList.contains('analyzeButton')) {
             const description = event.target.dataset.description;

@@ -4,7 +4,56 @@ body {
       padding: 0;
       background-color: #f4f4f4;
     }
+
+    .analyzeButton {
+      background-color: rgb(0, 174, 255);
+      border-radius: 6px;
+      text-align: center;
+      align-items: center;
+      align-self: center;
+      display: flex;
+      justify-content: center;
+      margin-left: 10px;
+      margin-bottom: 10px;
+      padding: 3px;
+      transition: background 0.3s ease;
+      border: 2px;
+      border-style: solid;
+    }
     
+    .analyzeButton:hover {
+      background-color: rgb(1, 129, 188);
+
+    }
+
+    .analyzeButton:active {
+      background-color: rgb(0, 72, 139);
+    }
+
+    .morebtn {
+      background-color: rgb(173, 177, 178);
+      border-radius: 6px;
+      text-align: center;
+      align-items: center;
+      align-self: center;
+      display: flex;
+      justify-content: center;
+      margin: auto;
+      margin-bottom: 10px;
+      padding: 5px;
+      transition: background 0.3s ease;
+      border: 2px;
+      border-style: solid;
+    }
+
+    .morebtn:hover {
+      background-color: rgb(127, 131, 132);
+    }
+    
+    .morebtn:active {
+      background-color: rgb(99, 99, 99);
+    }
+
     h2 {
       margin-left: 10px;
       font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
