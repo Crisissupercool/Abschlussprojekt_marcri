@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url';
 import path from 'path';
 import { LanguageServiceClient } from '@google-cloud/language';
 import { PredictionServiceClient } from '@google-cloud/aiplatform';
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const app = express();
 const port = 3000;
@@ -17,17 +18,17 @@ app.use(bodyParser.json());
 // Serve static files from the frontend directory
 app.use(express.static(path.join(__dirname, '../frontend')));
 
-const PROJECT_ID = 'wide-origin-426109-h4';
-const location = 'europe-west6-a';
-const modelId = 'gemini-1.5-pro-001';
+const PROJECT_ID = 'zli-ictblj';
+const location = 'europe-west6';
+const modelId = 'gemini-1.5-flash-001';
 
 // Initialize PredictionServiceClient with the full endpoint
-const endpoint = `https://${location}-aiplatform.googleapis.com/v1/projects/${PROJECT_ID}/locations/${location}/publishers/google/models/${modelId}`;
+const endpoint = `https://${location}-aiplatform.googleapis.com/v1/projects/${PROJECT_ID}/locations/${location}/publishers/google/models/${modelId}:streamGenerateContent`
 const predictionClient = new PredictionServiceClient({
   apiEndpoint: `${location}-aiplatform.googleapis.com`
 });
 
-const apiKey = "28dd2111720337a86ce6abda3142b0b722efa056"; // Replace with your actual API key
+const apiKey = "AIzaSyAXhqwKR9sqI_U8cFQVCQeKy9RaFn_Szsw"; // Replace with your actual API key
 
 fetch('https://example.googleapis.com/v1/resource', {
     method: 'GET',
@@ -42,61 +43,20 @@ fetch('https://example.googleapis.com/v1/resource', {
 
 app.post('/api/analyze-disaster', async (req, res) => {
     try {
-        console.log('Analyze Disaster Request:', req.body);
-        const { userChosenDisaster } = req.body;
+        const userChosenDisaster = req.body.text;
+        // Access your API key as an environment variable (see "Set up your API key" above)
+        const genAI = new GoogleGenerativeAI(apiKey);
 
-        // Analyze sentiment of the text using Google Cloud Language API
-        const client = new LanguageServiceClient();
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        const prompt = "Analyze the following Natural Disaster: " + userChosenDisaster;
 
-        // Define the document object
-        const document = {
-            type: 'PLAIN_TEXT', // Set the type to PLAIN_TEXT
-            content: `Analyze the following Natural Disaster: ${userChosenDisaster}`, // Set the content of the document
-        };
-
-        // Analyze sentiment of the document
-        const [sentimentResult] = await client.analyzeSentiment({ document });
-        const sentiment = sentimentResult.documentSentiment;
-
-        // Adjusted request body for the Gemini model
-        const instance = {
-            content: userChosenDisaster
-        };
-
-        const predictionRequest = {
-            endpoint: endpoint,
-            instances: [instance],
-            parameters: {
-                safetySettings: [
-                    {
-                        category: "HARM_CATEGORY_HATE_SPEECH",
-                        threshold: "BLOCK_MEDIUM_AND_ABOVE"
-                    },
-                    {
-                        category: "HARM_CATEGORY_DANGEROUS_CONTENT",
-                        threshold: "BLOCK_MEDIUM_AND_ABOVE"
-                    },
-                    {
-                        category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-                        threshold: "BLOCK_MEDIUM_AND_ABOVE"
-                    },
-                    {
-                        category: "HARM_CATEGORY_HARASSMENT",
-                        threshold: "BLOCK_MEDIUM_AND_ABOVE"
-                    }
-                ]
-            }
-        };
-
-        // Generate suggestions using Google Cloud Vertex AI Generative Model
-        const [response] = await predictionClient.predict(predictionRequest);
-        const contentResponse = response.predictions[0]?.content || '';
-
+        const result = await model.generateContent(prompt);
+        console.log(result.response.text());
         // Return the sentiment results and generated suggestions
-        res.json({ sentiment, mitigationSuggestions: contentResponse });
+        res.json({ result });
     } catch (error) {
         console.error('Error analyzing disaster:', error);
-        res.status(500).json({ error: 'Error analyzing disaster' });
+        res.status(404).json({ error: 'Error analyzing disaster' });
     }
 });
 
