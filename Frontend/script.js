@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function() {
         setLoading(true);
         try {
             const userFeeds = await fetchUserFeeds();
-            document.getElementById('userFeeds').innerHTML = '<h2>Natural Disaster Feed</h2>';
+            document.getElementById('userFeeds').innerHTML = '<h1>Natural Disaster Feed</h1>';
             userFeeds.forEach(feed => {
                 document.getElementById('userFeeds').innerHTML += `<p class="desc">${feed.description}</p>`;
             });

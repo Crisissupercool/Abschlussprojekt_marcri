@@ -46,7 +46,16 @@ app.post('/api/analyze-disaster', async (req, res) => {
         const userChosenDisaster = req.body.text;
         const genAI = new GoogleGenerativeAI(apiKey);
         const model = genAI.getGenerativeModel({model: "gemini-1.5-flash"});
-        const prompt = "Analyze the following Natural Disaster. Give a very small HTML text about how bad this Disaster is for the World and what me as a Human or everyone as a society can do to prevent this disaster from happening in the future. Make sure to not use Markdown functions like * **Text**, instead write in Html code since this will be outputted in a website. DO NOT use ´´´Html at the beginning and ´´´ at the end since that would be visible in the site. Also make sure to use the style {margin-left: 8px;}. DO NOT make new Classes since that messes up the style of the website: " + userChosenDisaster;
+        const prompt = `
+        Analyze the following Natural Disaster: ${userChosenDisaster}.
+        - Provide a short HTML description of how severe this disaster is for the world.
+        - Suggest actions that individuals and society can take to prevent such disasters in the future.
+        - Do not use Markdown syntax like * or **.
+        - Output the text directly in HTML.
+        - Do not include '''Html at the beginning or end.
+        - Use the style {margin-left: 8px;} in your HTML.
+        - Do not create new CSS classes.
+        `;
 
         const result = await model.generateContent(prompt);
         const output = result.response.text();
