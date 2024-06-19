@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url';
 import path from 'path';
 import { LanguageServiceClient } from '@google-cloud/language';
 import { PredictionServiceClient } from '@google-cloud/aiplatform';
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const app = express();
 const port = 3000;
@@ -18,16 +19,16 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../frontend')));
 
 const PROJECT_ID = 'wide-origin-426109-h4';
-const location = 'europe-west6-a';
+const location = 'europe-west6';
 const modelId = 'gemini-1.5-pro-001';
 
 // Initialize PredictionServiceClient with the full endpoint
-const endpoint = `https://${location}-aiplatform.googleapis.com/v1/projects/${PROJECT_ID}/locations/${location}/publishers/google/models/${modelId}`;
+const endpoint = `https://${location}-aiplatform.googleapis.com/v1/projects/${PROJECT_ID}/locations/${location}/publishers/google/models/${modelId}:streamGenerateContent`;
 const predictionClient = new PredictionServiceClient({
-  apiEndpoint: `${location}-aiplatform.googleapis.com`
-});
+    apiEndpoint: `${location}-aiplatform.googleapis.com`
+  });
 
-const apiKey = "28dd2111720337a86ce6abda3142b0b722efa056"; // Replace with your actual API key
+const apiKey = "AIzaSyBkFRJ69YdzSvC-jtXlhCoqvSxbuWsqa5A"; // Replace with your actual API key
 
 fetch('https://example.googleapis.com/v1/resource', {
     method: 'GET',
@@ -42,58 +43,15 @@ fetch('https://example.googleapis.com/v1/resource', {
 
 app.post('/api/analyze-disaster', async (req, res) => {
     try {
-        console.log('Analyze Disaster Request:', req.body);
-        const { userChosenDisaster } = req.body;
+        const userChosenDisaster = req.body.text;
+        const genAI = new GoogleGenerativeAI(apiKey);
+        const model = genAI.getGenerativeModel({model: "gemini-1.5-flash"});
+        const prompt = "Analyze the following Natural Disaster. Give a very small HTML text about how bad this Disaster is for the World and what me as a Human or everyone as a society can do to prevent this disaster from happening in the future. Make sure to not use Markdown functions like * **Text**, instead write in Html code since this will be outputted in a website. DO NOT use ´´´Html at the beginning and ´´´ at the end since that would be visible in the site. Also make sure to use the style {margin-left: 8px;}. DO NOT make new Classes since that messes up the style of the website: " + userChosenDisaster;
 
-        // Analyze sentiment of the text using Google Cloud Language API
-        const client = new LanguageServiceClient();
-
-        // Define the document object
-        const document = {
-            type: 'PLAIN_TEXT', // Set the type to PLAIN_TEXT
-            content: `Analyze the following Natural Disaster: ${userChosenDisaster}`, // Set the content of the document
-        };
-
-        // Analyze sentiment of the document
-        const [sentimentResult] = await client.analyzeSentiment({ document });
-        const sentiment = sentimentResult.documentSentiment;
-
-        // Adjusted request body for the Gemini model
-        const instance = {
-            content: userChosenDisaster
-        };
-
-        const predictionRequest = {
-            endpoint: endpoint,
-            instances: [instance],
-            parameters: {
-                safetySettings: [
-                    {
-                        category: "HARM_CATEGORY_HATE_SPEECH",
-                        threshold: "BLOCK_MEDIUM_AND_ABOVE"
-                    },
-                    {
-                        category: "HARM_CATEGORY_DANGEROUS_CONTENT",
-                        threshold: "BLOCK_MEDIUM_AND_ABOVE"
-                    },
-                    {
-                        category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-                        threshold: "BLOCK_MEDIUM_AND_ABOVE"
-                    },
-                    {
-                        category: "HARM_CATEGORY_HARASSMENT",
-                        threshold: "BLOCK_MEDIUM_AND_ABOVE"
-                    }
-                ]
-            }
-        };
-
-        // Generate suggestions using Google Cloud Vertex AI Generative Model
-        const [response] = await predictionClient.predict(predictionRequest);
-        const contentResponse = response.predictions[0]?.content || '';
-
-        // Return the sentiment results and generated suggestions
-        res.json({ sentiment, mitigationSuggestions: contentResponse });
+        const result = await model.generateContent(prompt);
+        const output = result.response.text();
+        console.log(output)
+        res.json({ result: output });
     } catch (error) {
         console.error('Error analyzing disaster:', error);
         res.status(500).json({ error: 'Error analyzing disaster' });

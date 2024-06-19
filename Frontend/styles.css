@@ -5,6 +5,10 @@ body {
       background-color: #f4f4f4;
     }
 
+    .outputai {
+      margin-left: 3px;
+    }
+
     .analyzeButton {
       background-color: rgb(0, 174, 255);
       border-radius: 6px;

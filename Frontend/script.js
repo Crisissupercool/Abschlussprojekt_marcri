@@ -65,6 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <p class="halloballo"><strong>Updated At:</strong> ${event.updatedAt}</p>
                     <p class="halloballo"><strong>External URLs:</strong> ${event.externalUrls.map(url => `<a href="${url}" target="_blank">${url}</a>`).join(', ')}</p>
                     <button class="analyzeButton" data-description="${event.description}">Analyze</button>
+                    <div class="analysisResult"></div> <!-- Container for analysis result -->
                 </div>
             `;
         });
@@ -125,8 +126,16 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('Description:', description); // Konsolenausgabe hinzugefügt
             const analysis = await analyzeDisaster(description);
             console.log('Analysis:', analysis); // Konsolenausgabe hinzugefügt
-            // Hier kannst du die Analyseergebnisse weiterverarbeiten, z.B. anzeigen
+
+            // Find the corresponding analysis result container
+            const analysisResultContainer = event.target.nextElementSibling;
+
+            if (analysis.result) {
+                // Assuming `analysis.result` contains the HTML string
+                analysisResultContainer.innerHTML = analysis.result;
+            } else {
+                analysisResultContainer.innerHTML = `<p class="error">Error: ${analysis.error}</p>`;
+            }
         }
     });
-    
 });
