@@ -1,5 +1,5 @@
 # Abschlussprojekt_marcri
-This is a project from Cristian Martin for the end of my first year as an informatic. I created a Web-site that shows realtime data about natural disasters and has an included AI that analyzes those disasters. 
+This is a project from Cristian Martin for the end of my first year as an informatic. I created a Web-site that shows realtime data about natural disasters that has an included AI that analyzes those disasters. 
 ## How to use
 Install node.js (you can download from https://nodejs.org)
 ```bash
