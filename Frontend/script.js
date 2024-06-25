@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const displayError = (message) => {
         document.getElementById('error').innerHTML = `<p class="error">${message}</p>`;
     };
-
+    
     const setLoading = (isLoading) => {
         document.getElementById('loading').style.display = isLoading ? 'block' : 'none';
     };
