@@ -1,3 +1,10 @@
+/*
+Cristian Martin Fucile
+This Programm shows real world catastrophies around the world and has an AI that analyzes those
+Date of birth 26.6.2024 
+Date of death 10.9.2024
+*/
+
 document.addEventListener('DOMContentLoaded', function() {
     let offset = 0;
     const limit = 5;
